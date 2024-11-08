@@ -1,70 +1,99 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState } from 'react';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { View, Button, Text, TextInput } from 'react-native';
 
 export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
-  );
-}
+const [greeting, setGreeting] = useState('¡Hola, Alumno!');
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+const [nombre, setNombre] = useState('');
+
+const [language, setLanguage] = useState('es');
+
+
+const getTranslatedText = (key: string) => {
+const translations = {
+
+es: {
+greeting: `¡Hola, ${nombre || 'Alumno'}!`,
+namePlaceholder: 'Escribe tu nombre',
+updateGreeting: 'Actualizar Saludo',
+textSize: 'Tamaño del Texto',
+red: 'Rojo',
+green: 'Verde',
+blue: 'Azul',
+language: 'Idioma',
+spanish: 'Español',
+english: 'Inglés',
+},
+en: {
+greeting: `Hello, ${nombre || 'Student'}!`,
+namePlaceholder: 'Enter your name',
+updateGreeting: 'Update Greeting',
+textSize: 'Text Size',
+red: 'Red',
+green: 'Green',
+blue: 'Blue',
+language: 'Language',
+spanish: 'Spanish',
+english: 'English',
+},
+};
+return translations[language][key];
+
+};
+return (
+<View style={styles.container}>
+
+<Text style={styles.greetingText}>
+{getTranslatedText('greeting')}
+</Text>
+
+<TextInput
+style={styles.input}
+placeholder={getTranslatedText('namePlaceholder')}
+
+value={nombre}
+onChangeText={(text) => setNombre(text)}
+/>
+
+<Button
+title={getTranslatedText('updateGreeting')}
+onPress={() => setGreeting(getTranslatedText('greeting'))}
+/>
+
+<Text>{getTranslatedText('language')}</Text>
+
+<View style={styles.buttonContainer}>
+<Button title={getTranslatedText('spanish')} onPress={() => setLanguage('es')} />
+
+<Button title={getTranslatedText('english')} onPress={() => setLanguage('en')} />
+
+</View>
+</View>
+);
+}
+const styles = {
+container: {
+flex: 1,
+justifyContent: 'center',
+alignItems: 'center',
+},
+greetingText: {
+fontSize: 24,
+marginBottom: 10,
+},
+input: {
+height: 40,
+borderColor: 'gray',
+borderWidth: 1,
+width: 200,
+
+paddingHorizontal: 10,
+marginBottom: 20,
+},
+buttonContainer: {
+flexDirection: 'row',
+justifyContent: 'space-around',
+width: '60%',
+},
+};
